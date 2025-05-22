@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+model Thread {
+  id        String    @id @default(cuid())
+  title     String
+  tags      String    // カンマ区切り文字列
+  createdAt DateTime  @default(now())
+  messages  Message[]
+}
+
+model Message {
+  id          String    @id @default(cuid())
+  threadId    String
+  thread      Thread    @relation(fields: [threadId], references: [id])
+  name        String
+  content     String
+  createdAt   DateTime  @default(now())
+  parentId    String?
+  parent      Message?  @relation("Reply", fields: [parentId], references: [id])
+  replies     Message[] @relation("Reply")
+  isDeleted   Boolean   @default(false)
+  uuid        String
+}
+
