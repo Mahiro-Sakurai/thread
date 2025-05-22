@@ -1,48 +1,27 @@
-import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// GET: スレッド一覧
 export async function GET() {
     const threads = await prisma.thread.findMany({
-        include: {
-            messages: {
-                select: { createdAt: true },
-                orderBy: { createdAt: 'desc' },
-                take: 1,
-            },
-        },
+        orderBy: { createdAt: 'desc' },
     });
-
-    const sorted = threads.sort((a, b) => {
-        const dateA = a.messages[0]?.createdAt || new Date(0);
-        const dateB = b.messages[0]?.createdAt || new Date(0);
-        return dateB.getTime() - dateA.getTime();
-    });
-
-    const result = sorted.map(({ messages, ...thread }) => ({
-        ...thread,
-        latestMessageAt: messages[0]?.createdAt ?? thread.createdAt,
-    }));
-
-    return NextResponse.json(result);
+    return NextResponse.json(threads);
 }
 
+// POST: 新しいスレッド作成
 export async function POST(req: Request) {
-    const body = await req.json();
-    const { title, tags } = body;
+    const { title, tags } = await req.json();
 
     if (!title || typeof title !== 'string') {
-        return NextResponse.json({ error: 'タイトルは必須です' }, { status: 400 });
+        return NextResponse.json({ error: 'タイトルは必須' }, { status: 400 });
     }
 
     const thread = await prisma.thread.create({
-        data: {
-            title,
-            tags: tags || '',
-        },
+        data: { title, tags: tags || '' },
     });
 
     return NextResponse.json(thread, { status: 201 });
 }
-
