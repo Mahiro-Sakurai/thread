@@ -3,16 +3,24 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL") 
 }
 model Thread {
   id        String    @id @default(cuid())
   title     String
-  tags      String    // カンマ区切り文字列
   createdAt DateTime  @default(now())
   messages  Message[]
+  tags      Tag[]     // リレーション：1対多
 }
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String
+  thread    Thread   @relation(fields: [threadId], references: [id])
+  threadId  String
+}
+
 
 model Message {
   id          String    @id @default(cuid())
