@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import TagInput from '../../components/TagInput';
 
 
@@ -38,9 +39,9 @@ export default function NewThreadPage() {
     return (
         <main className="max-w-md mx-auto p-4">
             <h1 className="text-xl font-bold mb-4">新しいスレッドを作成</h1>
-            <a href="/" className="text-blue-600 underline text-sm mb-4 inline-block">
+            <Link href="/" className="text-blue-600 underline text-sm mb-4 inline-block">
                 ← ホームに戻る
-            </a>
+            </Link>
             {error && <p className="text-red-600 mb-2">{error}</p>}
 
             <form onSubmit={handleSubmit} className="space-y-4">

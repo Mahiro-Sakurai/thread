@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 type Thread = {
   id: string;
@@ -52,9 +53,10 @@ export default function Home() {
     <main className="w-1/2 sm:w-full md:max-w-2xl md:mx-auto p-4 space-y-6">
       <h1 className="text-2xl font-bold">掲示板一覧</h1>
 
-      <a href="/newthread" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 inline-block">
+      <Link href="/newthread" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 inline-block">
         スレッドを作成
-      </a>
+      </Link>
+
       <div className="flex gap-2 items-center">
         <input
           type="text"
